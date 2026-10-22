@@ -1,0 +1,19 @@
+node_modules/
+.next/
+.vercel/
+.env*
+!.env.example
+.data/
+.reader-data/
+*.tsbuildinfo
+coverage/
+test-results/
+.DS_Store
+todo.md
+.vercel
+
+# Local agent state and deployment-session notes
+.audit/
+.impeccable/
+docs/resume.md
+docs/verification/images/production-setup.jpg
