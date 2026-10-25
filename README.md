@@ -1,10 +1,18 @@
 # Margin
 
-A personal reading library inspired by Readwise Reader, built with Next.js and TypeScript. This is an active implementation, not a completed Readwise replacement. The [capability inventory](docs/capability-inventory.md) and [backlog](docs/backlog.md) track remaining work and verification.
+**Less noise. More room to read.**
+
+Margin is a self-hosted, single-account reading library for articles, feeds, PDFs and EPUBs. Save something interesting, read at your own pace, and keep your highlights and notes together. Built with Next.js, React and TypeScript, with PostgreSQL in production and PGlite for local development.
+
+Inspired by Readwise Reader; an independent project with no affiliation to Readwise. This is an active MVP. See the [capability inventory](docs/capability-inventory.md) and [backlog](docs/backlog.md) for gaps and verification status.
+
+![Margin reader with document search and a notebook, using synthetic sample content](docs/verification/images/reader-find.jpg)
+
+[Get started](#run-locally) · [Documentation](docs/README.md) · [Deploy](docs/deployment.md) · [Contribute](CONTRIBUTING.md) · [Security](SECURITY.md)
 
 ## Run locally
 
-Use a current Node.js version supported by the installed Next.js and PDF parser packages.
+Use Node.js 22.3 or newer and npm. The lockfile pins dependencies; install with `npm ci`.
 
 ```sh
 npm ci
@@ -44,7 +52,7 @@ Tests use isolated databases and synthetic documents. A successful build does no
 5. Create the personal account through the setup screen. Verify login, capture, annotations, uploads, download, and persistence after redeployment before importing personal material.
 6. Verify the daily feed cron using the configured bearer secret. See [scheduled feeds](docs/scheduled-feeds.md).
 
-Never deploy `.env.local`, local PGlite directories, test credentials, or production database dumps. The MVP is deployed on Vercel Hobby with Neon Free. Production login, article import, metadata preservation, and database persistence have been verified.
+Keep `.env.local`, local PGlite directories, test credentials, and database dumps out of Git. Configure production secrets through your hosting provider. See the [deployment guide](docs/deployment.md) for environment variables, backups and smoke checks.
 
 ## Current operational limits
 

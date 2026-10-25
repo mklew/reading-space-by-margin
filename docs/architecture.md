@@ -24,14 +24,14 @@ Document notes and tags require the document revision. Highlight note/tag edits 
 
 ## Local and production storage
 
-Local development uses disk-backed PGlite, with the same PostgreSQL SQL schema used through the postgres driver in production. Tests use isolated in-memory PGlite databases. Production requires DATABASE_URL and does not fall back to local filesystem storage. Local development must remain possible while Vercel project creation is awaiting approval. This intentionally limits the bootstrap skill's linked-resource ordering to shared cloud resources.
+Local development uses disk-backed PGlite, with the same PostgreSQL SQL schema used through the postgres driver in production. Tests use isolated in-memory PGlite databases. Production requires DATABASE_URL and does not fall back to local filesystem storage.
 
 The first personal account requires an environment setup secret. Password hashes use scrypt. Sessions and capture tokens are random opaque secrets stored hashed. HttpOnly cookies authenticate browser requests. Origin checks protect browser mutations. Capture tokens can only add a URL. Setup and login need persisted attempt limits.
 
-## Deployment gate
+## Deployment
 
-The connected Vercel account currently lists no teams or projects. Automatic approval review rejected creation of the proposed margin-reader project due to missing explicit project name and account approval. No project or database was created. Prepare and verify the implementation locally before requesting approval for the concrete target. Do not bypass the rejection through the CLI.
+See the [deployment guide](deployment.md) for configuration and persistence checks. Each installation needs its own database and secrets.
 
 ## Verification
 
-Run behavior tests for safe fetch, extraction, feed parsing, persistence, ownership, deduplication, optimistic concurrency, session/token scope, and highlight anchors. Drive desktop and mobile browser workflows. Independently review the code and decision trail. After approval, deploy to Vercel and repeat critical journeys against the actual deployment. A local build does not prove deployment or phone integration.
+Run behavior tests for safe fetch, extraction, feed parsing, persistence, ownership, deduplication, optimistic concurrency, session/token scope, and highlight anchors. Drive desktop and mobile browser workflows. Independently review the code and decision trail. When deploying to Vercel, repeat critical journeys against the actual deployment. A local build does not prove deployment or phone integration.
