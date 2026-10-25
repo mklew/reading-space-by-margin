@@ -1,39 +1,122 @@
-# Margin
+<p align="center">
+  <img src="public/icon.svg" width="64" height="64" alt="Margin bookmark icon">
+</p>
 
-**Less noise. More room to read.**
+<h1 align="center">Margin</h1>
 
-Margin is a self-hosted, single-account reading library for articles, feeds, PDFs and EPUBs. Save something interesting, read at your own pace, and keep your highlights and notes together. Built with Next.js, React and TypeScript, with PostgreSQL in production and PGlite for local development.
+<p align="center"><strong>A malleable reading space. Clean by design. Built to work with agents.</strong></p>
 
-Inspired by Readwise Reader; an independent project with no affiliation to Readwise. This is an active MVP. See the [capability inventory](docs/capability-inventory.md) and [backlog](docs/backlog.md) for gaps and verification status.
+<p align="center">
+  <a href="#get-started">Get started</a> ·
+  <a href="docs/site/pages/index.md">Handbook</a> ·
+  <a href="docs/site/pages/architecture/overview.md">Architecture</a> ·
+  <a href="docs/site/pages/development/agents.md">For agents</a>
+</p>
 
-![Margin reader with document search and a notebook, using synthetic sample content](docs/verification/images/reader-find.jpg)
+Margin is a self-hosted reading space for articles, feeds, PDFs and EPUBs. Collect what interests you, read without clutter, and keep your notes beside the passages that matter.
 
-[Get started](#run-locally) · [Documentation](docs/site/pages/index.md) · [Deploy](docs/deployment.md) · [Contribute](CONTRIBUTING.md) · [Security](SECURITY.md)
+The purpose is to make a reader you can shape around your own habits. Configure the reading workflow, create views over your library, connect your tools, or work with an agent to change the application itself. Your data stays portable, and the architecture is documented so the next change has a clear place to begin.
 
-## Run locally
+**Architected and delivered with [pstack](https://github.com/michael-denyer/pstack-claude) and [Impeccable](https://impeccable.style/).**
 
-Use Node.js 22.3 or newer and npm. The lockfile pins dependencies; install with `npm ci`.
+![Margin reader with passage search and a notebook, showing synthetic sample content](docs/verification/images/reader-find.jpg)
+
+## A reader you can make your own
+
+Malleability starts with everyday choices. Pick a Triage, Shortlist or Classic workflow. Adjust the type, reading width, theme and keyboard shortcuts. Pin a saved query such as `tag:research AND minutes__lt:10` to make a collection that changes with your library.
+
+It extends to the code. Margin brings the interface, domain model, storage and tool adapters into one repository. You can inspect how a feature works and adapt it with an agent. The [handbook](docs/site/pages/index.md) explains both the product and the boundaries a change must preserve.
+
+The design keeps reading central: restrained color, generous spacing, readable type and a notebook alongside the text.
+
+## What you can do today
+
+| | In Margin |
+| --- | --- |
+| Collect | Save public articles or pasted text; upload PDFs and EPUBs |
+| Follow | Subscribe to RSS and Atom feeds, including supported podcast enclosures and YouTube channel entries |
+| Organize | Use workflow folders, tags, favorites, bulk actions and saved boolean queries |
+| Read | Adjust the reader, keep your place, find passages and listen with system speech |
+| Remember | Highlight text, add notes and revisit annotations in the notebook |
+| Keep your library | Import and export JSON, CSV, OPML and ZIP archives with original files |
+| Connect tools | Search and read through the CLI or MCP; save URLs with a separate capture credential |
+
+See the [feature guide](docs/site/pages/guide/features.md) for supported behavior and limits.
+
+## Agent-friendly architecture
+
+Agents can work with Margin in two ways: use scoped tools to read a library, or work on the source to adapt the product.
+
+The local MCP adapter exposes `margin_list`, `margin_search` and `margin_read`. The CLI also supports URL capture. Read and capture tokens have separate permissions; a read token cannot change documents or download originals.
+
+For development, typed domain records, explicit server boundaries and behavior tests make changes easier to reason about. The documentation includes an agent guide, individual Markdown exports, `llms.txt` and a complete `llms-full.txt` bundle.
+
+```mermaid
+flowchart LR
+    Browser[Reader interface] --> API[Next.js HTTP API]
+    MCP[MCP adapter] --> CLI[CLI]
+    CLI --> API
+    API --> Services[Authentication, capture and library services]
+    Services --> DB[(PostgreSQL / local PGlite)]
+```
+
+The application uses Next.js, React and TypeScript. PostgreSQL holds production data; PGlite makes local development possible without a database service. Each account's library is currently one JSONB aggregate, with originals stored separately. The [architecture guide](docs/site/pages/architecture/overview.md) explains that tradeoff and its scaling limits.
+
+[Connect an MCP client](docs/site/pages/reference/mcp.md) · [Use the CLI](docs/site/pages/reference/cli.md) · [Read the API contract](docs/site/pages/reference/api.md)
+
+## Built with pstack and Impeccable
+
+Margin is also an exercise in building personal software with agents. pstack provides the engineering workflow for architecture, implementation and review. Impeccable provides the design guidance for hierarchy, typography, interaction and visual consistency.
+
+That approach carries into the repository: readable documentation, testable behavior and clear constraints for future changes. Neither tool is required to run Margin.
+
+## Get started
+
+Use Node.js 22.3 or newer and npm.
 
 ```sh
+git clone https://github.com/mklew/reading-space-by-margin.git
+cd reading-space-by-margin
 npm ci
 cp .env.example .env.local
 node -e "console.log(require('node:crypto').randomBytes(32).toString('hex'))"
 ```
 
-Put the generated value in `SETUP_SECRET` in `.env.local`, then run `npm run dev`. Open http://localhost:3000 and use that setup code to create the single personal account. Passwords and opaque session tokens are hashed before storage. The setup code does not become your account password.
+Set `SETUP_SECRET` in `.env.local` to the generated value. Leave `DATABASE_URL` unset to use local PGlite storage, then start the app:
 
-With `DATABASE_URL` unset, development data lives in the PGlite directory named by `READER_DATA_DIR`. Run only one app process against that directory. Production deliberately refuses local file storage and requires PostgreSQL.
+```sh
+npm run dev
+```
 
-## Current functionality
+Open [localhost:3000](http://localhost:3000), enter the setup code and create your personal account with a separate password. Run only one app process against the local data directory.
 
-- Save public web articles or pasted text; capture tokens support external shortcuts.
-- RSS/Atom subscriptions, folders, refresh and podcast enclosures.
-- Library workflows, saved boolean queries, favorites, bulk moves/tags and trash.
-- Reader preferences, progress, contents, highlights, notes, global notebook and system speech.
-- PDF/EPUB uploads with extracted text and downloadable originals. Scanned PDFs need original-page viewing; OCR is not implemented.
-- JSON/CSV/OPML/ZIP transfer, Readwise CSV metadata mapping, import preview, and ZIP originals with SHA-256 validation.
+For a hosted installation, follow the [deployment guide](docs/site/pages/guide/deployment.md). Production requires PostgreSQL and its own secrets.
 
-## Validation
+## Explore the handbook
+
+The VitePress handbook covers the product, reading workflows, deployment, architecture and development. It has local search, light and dark themes, and Markdown exports for agents.
+
+```sh
+npm --prefix docs/site ci
+npm run docs:dev
+```
+
+| Start here | What you will find |
+| --- | --- |
+| [Product overview](docs/site/pages/guide/product.md) | Purpose, vocabulary and the everyday reading loop |
+| [Reading workflow](docs/site/pages/guide/reading.md) | Folders, views, notes and shortcuts |
+| [Architecture](docs/site/pages/architecture/overview.md) | Components, data flow and design decisions |
+| [Agent guide](docs/site/pages/development/agents.md) | Source map, invariants and validation |
+| [Contributing](CONTRIBUTING.md) | Development setup and contribution guidance |
+| [Security](SECURITY.md) | Credential handling, privacy boundaries and reporting |
+
+## Status and boundaries
+
+Margin is an active MVP with one account per installation. Agent access is available through its tools; built-in AI chat and summaries are not implemented. Offline synchronization, public sharing, OCR and full-fidelity book rendering remain future work.
+
+Uploads have a 4 MB request limit. Large libraries and archives need further scaling work. The server can read stored library content; storage is not end-to-end encrypted. Keep secrets, local databases and private exports out of Git.
+
+Validate application changes with:
 
 ```sh
 npm run typecheck
@@ -41,38 +124,6 @@ npm test
 npm run build
 ```
 
-Tests use isolated databases and synthetic documents. A successful build does not prove deployed persistence, browser workflows, or provider integrations. Browser evidence lives in `docs/verification`.
+Build the handbook with `npm run docs:build`. Tests use isolated databases and synthetic documents. See [testing and verification](docs/site/pages/development/testing.md) for coverage and limits.
 
-## Vercel deployment
-
-1. Create/link the intended Vercel project and a durable PostgreSQL database.
-2. Configure sensitive environment variables: `DATABASE_URL`, a random `SETUP_SECRET`, and a separately generated `CRON_SECRET`.
-3. Set `APP_ORIGIN` to the exact canonical HTTPS app origin. Preview deployments need their own matching origin and isolated database.
-4. Deploy the Next.js application. Schema tables initialize on first database use; database credentials therefore need schema-creation permission.
-5. Create the personal account through the setup screen. Verify login, capture, annotations, uploads, download, and persistence after redeployment before importing personal material.
-6. Verify the daily feed cron using the configured bearer secret. See [scheduled feeds](docs/scheduled-feeds.md).
-
-Keep `.env.local`, local PGlite directories, test credentials, and database dumps out of Git. Configure production secrets through your hosting provider. See the [deployment guide](docs/deployment.md) for environment variables, backups and smoke checks.
-
-## Current operational limits
-
-Uploads use a 4 MB request limit. Archive parsing allows 20 MB compressed / 50 MB expanded locally; deployment request and response limits may be lower, so larger transfers need direct object-storage jobs. Archives are assembled in memory. Files and library import are separate writes; a failed import can leave an unreferenced, deduplicated original.
-
-The library currently lives in one JSONB row per account, locked for each mutation; originals use a separate bytea table. This supports the present personal-library implementation but needs measurement and migration for large collections. Offline access, public sharing, complete external integrations, AI, richer book rendering and comprehensive browser verification remain open work.
-
-## Tools
-
-The [CLI guide](docs/cli.md) covers listing, searching, reading and URL capture. Generate a read token under Settings → Tool integrations. Read tokens cannot change documents; URL capture uses a separate capture token. See the [API contract](docs/integration-api.md) for scopes and response formats.
-
-For assistant access, see the [MCP setup guide](docs/mcp.md). The local stdio adapter exposes read-only list, search and document tools.
-
-## Public handbook
-
-The VitePress handbook covers the product, feature set, reading workflows, architecture and development. Its sources are in [`docs/site/pages`](docs/site/pages/index.md); historical research outside that directory is not published.
-
-```sh
-npm --prefix docs/site ci
-npm run docs:dev
-```
-
-Use `npm run docs:build` to produce the static site, then `npm run docs:preview` to inspect it. The build includes local search, individual Markdown pages and `llms.txt` / `llms-full.txt` for agents. See the [documentation guide](docs/site/pages/development/documentation.md) for hosting and base paths.
+Margin is an independent project inspired by Readwise Reader, with no affiliation to Readwise.
