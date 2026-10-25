@@ -8,7 +8,7 @@ Inspired by Readwise Reader; an independent project with no affiliation to Readw
 
 ![Margin reader with document search and a notebook, using synthetic sample content](docs/verification/images/reader-find.jpg)
 
-[Get started](#run-locally) · [Documentation](docs/README.md) · [Deploy](docs/deployment.md) · [Contribute](CONTRIBUTING.md) · [Security](SECURITY.md)
+[Get started](#run-locally) · [Documentation](docs/site/pages/index.md) · [Deploy](docs/deployment.md) · [Contribute](CONTRIBUTING.md) · [Security](SECURITY.md)
 
 ## Run locally
 
@@ -65,3 +65,14 @@ The library currently lives in one JSONB row per account, locked for each mutati
 The [CLI guide](docs/cli.md) covers listing, searching, reading and URL capture. Generate a read token under Settings → Tool integrations. Read tokens cannot change documents; URL capture uses a separate capture token. See the [API contract](docs/integration-api.md) for scopes and response formats.
 
 For assistant access, see the [MCP setup guide](docs/mcp.md). The local stdio adapter exposes read-only list, search and document tools.
+
+## Public handbook
+
+The VitePress handbook covers the product, feature set, reading workflows, architecture and development. Its sources are in [`docs/site/pages`](docs/site/pages/index.md); historical research outside that directory is not published.
+
+```sh
+npm --prefix docs/site ci
+npm run docs:dev
+```
+
+Use `npm run docs:build` to produce the static site, then `npm run docs:preview` to inspect it. The build includes local search, individual Markdown pages and `llms.txt` / `llms-full.txt` for agents. See the [documentation guide](docs/site/pages/development/documentation.md) for hosting and base paths.

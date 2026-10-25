@@ -27,3 +27,7 @@ docs/verification/images/production-setup.jpg
 *.dump
 backups/
 exports/
+
+# Generated documentation site
+docs/site/.vitepress/cache/
+docs/site/.vitepress/dist/

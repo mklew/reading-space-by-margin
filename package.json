@@ -9,7 +9,10 @@
     "build": "next build",
     "start": "next start --hostname 0.0.0.0",
     "test": "node --import tsx --test tests/*.test.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "docs:dev": "npm --prefix docs/site run dev --",
+    "docs:build": "npm --prefix docs/site run build --",
+    "docs:preview": "npm --prefix docs/site run preview --"
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.5.11",

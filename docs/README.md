@@ -1,5 +1,7 @@
 # Documentation
 
+The [public handbook](site/pages/index.md) is the current entry point for users, operators and developers. Run `npm run docs:dev` after `npm --prefix docs/site ci` to browse it as a searchable VitePress site. The older documents below retain design and verification history.
+
 Start with the [project README](../README.md) to run Margin locally.
 
 ## Use and operate Margin
